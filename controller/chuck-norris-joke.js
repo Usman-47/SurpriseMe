@@ -1,4 +1,8 @@
-const chuckNorrisJoke = async (birthYear, SurprizeMe) => {
+const chuckNorrisJoke = async (
+  birthYear,
+  SurprizeMeStats,
+  SurprizeMeResponse
+) => {
   if (birthYear <= 2000) {
     var jokes = [
       "I ate a clock yesterday, it was very time-consuming.",
@@ -7,10 +11,19 @@ const chuckNorrisJoke = async (birthYear, SurprizeMe) => {
       "Never trust atoms; they make up everything.",
     ];
     var joke = jokes[Math.floor(Math.random() * jokes.length)];
-    let data = await SurprizeMe.findOne();
+    resData = {
+      joke,
+      type: "chuck-norris-joke",
+    };
+    let resDb = new SurprizeMeResponse({
+      type: resData.type,
+      result: resData.joke,
+    });
+    await resDb.save();
+    let data = await SurprizeMeStats.findOne();
 
     if (!data) {
-      let newData = new SurprizeMe({
+      let newData = new SurprizeMeStats({
         stats: {
           reaquest: 0,
           distribution: [
@@ -30,7 +43,7 @@ const chuckNorrisJoke = async (birthYear, SurprizeMe) => {
     await data.save();
 
     return {
-      data: joke,
+      data: resData,
       status: true,
       code: 200,
     };

@@ -1,4 +1,9 @@
-const kanyeQuotes = async (birthYear, name, SurprizeMe) => {
+const kanyeQuotes = async (
+  birthYear,
+  name,
+  SurprizeMeStats,
+  SurprizeMeResponse
+) => {
   const splitName = name.split("");
   if (splitName[0] === "a" || splitName[0] === "z") {
     return {
@@ -15,10 +20,19 @@ const kanyeQuotes = async (birthYear, name, SurprizeMe) => {
       "Never trust atoms; they make up everything.",
     ];
     var quote = quotes[Math.floor(Math.random() * quotes.length)];
-    let data = await SurprizeMe.findOne();
+    resData = {
+      quote,
+      type: "kanye-quote",
+    };
+    let resDb = new SurprizeMeResponse({
+      type: resData.type,
+      result: resData.quote,
+    });
+    await resDb.save();
+    let data = await SurprizeMeStats.findOne();
 
     if (!data) {
-      let newData = new SurprizeMe({
+      let newData = new SurprizeMeStats({
         stats: {
           reaquest: 0,
           distribution: [
@@ -37,7 +51,7 @@ const kanyeQuotes = async (birthYear, name, SurprizeMe) => {
     data.stats.distribution[2].count = count;
     await data.save();
     return {
-      data: quote,
+      data: resData,
       status: true,
       code: 200,
     };

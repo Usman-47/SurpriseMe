@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const surprizeMeSchema = new Schema({
+const surprizeMeStatsSchema = new Schema({
   stats: {
     requests: { type: Number },
     distribution: [
       {
-        type: { type: String },
+        type: {
+          type: String,
+        },
         count: { type: Number },
       },
     ],
   },
 });
 
-module.exports = mongoose.model("SurprizeMe", surprizeMeSchema);
+module.exports = mongoose.model("SurprizeMeStats", surprizeMeStatsSchema);
