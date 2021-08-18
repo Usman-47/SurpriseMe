@@ -16,7 +16,7 @@ function str_split(string, split_length) {
   return chunks;
 }
 
-const nameSum = (name) => {
+const nameSum = async (name, SurprizeMe) => {
   var alphabet = [
     "a",
     "b",
@@ -60,6 +60,27 @@ const nameSum = (name) => {
     var letterPosition = alphabet.indexOf(splitted_string[i]) + 1;
     count = count + letterPosition;
   }
+  let data = await SurprizeMe.findOne();
+
+  if (!data) {
+    let newData = new SurprizeMe({
+      stats: {
+        reaquest: 0,
+        distribution: [
+          { type: "", count: 0 },
+          { type: "", count: 0 },
+          { type: "", count: 0 },
+        ],
+      },
+    });
+    await newData.save();
+  }
+  count = data.stats.distribution[1].count;
+
+  count = count + 1;
+  data.stats.distribution[1].type = "name-sum";
+  data.stats.distribution[1].count = count;
+  await data.save();
   return {
     data: count,
     status: true,
